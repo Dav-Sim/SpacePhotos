@@ -8,7 +8,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpacePhotos.Api", "SpacePho
 		{3C57DD21-509B-4881-9AC5-20A462E4C2D0} = {3C57DD21-509B-4881-9AC5-20A462E4C2D0}
 	EndProjectSection
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "SpacePhotos.Frontend", "..\SpacePhotos.Frontend\SpacePhotos.Frontend.esproj", "{3C57DD21-509B-4881-9AC5-20A462E4C2D0}"
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "SpacePhotos.Frontend", "SpacePhotos.Frontend\SpacePhotos.Frontend.esproj", "{3C57DD21-509B-4881-9AC5-20A462E4C2D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SpacePhotos.Frontend\SpacePhotos.Frontend.esproj">
+    <ProjectReference Include="..\SpacePhotos.Frontend\SpacePhotos.Frontend.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>

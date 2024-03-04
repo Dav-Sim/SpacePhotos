@@ -1,3 +1,6 @@
+using Microsoft.Extensions.DependencyInjection;
+using SpacePhotos.Api.Helpers;
+
 namespace SpacePhotos.Api;
 
 public class Program
@@ -12,6 +15,10 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
+        builder.Services.AddHttpClient();
 
         var app = builder.Build();
 

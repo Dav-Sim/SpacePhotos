@@ -28,7 +28,7 @@ export function App() {
 
 function Layout() {
   return (
-    <div className="d-flex flex-column bg-dim" style={{ minHeight: '100vh' }}>
+    <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
       <Header />
       <Main>
         <Outlet />
