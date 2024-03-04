@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpacePhotos.Api", "SpacePhotos.Api\SpacePhotos.Api.csproj", "{AC4E3CFB-9D8B-4AB5-A52E-B230B432A95F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3C57DD21-509B-4881-9AC5-20A462E4C2D0} = {3C57DD21-509B-4881-9AC5-20A462E4C2D0}
+	EndProjectSection
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "SpacePhotos.Frontend", "..\SpacePhotos.Frontend\SpacePhotos.Frontend.esproj", "{3C57DD21-509B-4881-9AC5-20A462E4C2D0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC4E3CFB-9D8B-4AB5-A52E-B230B432A95F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC4E3CFB-9D8B-4AB5-A52E-B230B432A95F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC4E3CFB-9D8B-4AB5-A52E-B230B432A95F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC4E3CFB-9D8B-4AB5-A52E-B230B432A95F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C57DD21-509B-4881-9AC5-20A462E4C2D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C57DD21-509B-4881-9AC5-20A462E4C2D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C57DD21-509B-4881-9AC5-20A462E4C2D0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{3C57DD21-509B-4881-9AC5-20A462E4C2D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C57DD21-509B-4881-9AC5-20A462E4C2D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C57DD21-509B-4881-9AC5-20A462E4C2D0}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BA040B61-5CE6-4D81-8BF6-572C1984B88B}
+	EndGlobalSection
+EndGlobal
