@@ -17,5 +17,6 @@ export function defaultQueryOptions<TQueryFnData, TError, TData>(): UndefinedIni
 
 
 export const queryKeys = {
-    photos: "photos",
+    photoOfTheDay: "photoOfTheDay",
+    earthPhotos: "earthPhotos",
 }

@@ -7,3 +7,15 @@ export interface PhotoOfTheDay {
     title: string;
     url: string;
 }
+
+export interface EarthPhoto {
+    identifier: string;
+    caption: string;
+    image: string;
+    version: string;
+    date: string;
+    lat: number;
+    lon: number;
+    url: string;
+    hdurl: string;
+}

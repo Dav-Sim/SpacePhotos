@@ -16,7 +16,7 @@ export function Header() {
 
     //all menu links
     const links = useMemo(() => [
-        { url: "/", title: "Home" },
+        { url: "/", title: "Picture of the day" },
         { url: "/earth", title: "Earth" },
         { url: "/mars", title: "Mars" },
     ], []);
@@ -72,15 +72,17 @@ export function Header() {
                                     <i className="fa-solid fa-meteor me-2"></i>
                                     Space photos
                                 </h5>
-                                <a href="/" className="btn-close btn-close-white"
-                                    onClick={toggleMenu}></a>
+                                <a href="/"
+                                    className="btn-close btn-close-white"
+                                    onClick={toggleMenu}>
+                                </a>
                             </div>
 
                             <div className="offcanvas-body">
                                 <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
                                     {
                                         links.map(link =>
-                                            <li className="nav-item">
+                                            <li key={link.url} className="nav-item">
                                                 <a className="nav-link" href="/" onClick={ev => handleNavigate(ev, link.url)} key={link.url}>{link.title}</a>
                                             </li>
                                         )

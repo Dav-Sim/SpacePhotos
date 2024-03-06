@@ -21,7 +21,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.2",
     "react-select": "^5.8.0",
-    "sweetalert2": "^11.10.5"
+    "sweetalert2": "^11.10.5",
+    "yet-another-react-lightbox": "^3.17.0"
   },
   "devDependencies": {
     "@testing-library/react": "^14.2.1",
