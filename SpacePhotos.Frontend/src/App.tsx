@@ -6,6 +6,8 @@ import { Footer } from "./components/layout/Footer";
 import { HomePage } from "./pages/home/HomePage";
 import { LocalStorageContextWrapper } from "./helpers/localStorage";
 import { AppSettings, defaultAppSettings } from "./types/appSettings";
+import { MarsPage } from "./pages/mars/MarsPage";
+import { EarthPage } from "./pages/earth/EarthPage";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +20,8 @@ export function App() {
           <Routes>
             <Route Component={Layout}>
               <Route path={`/`} element={<HomePage />}></Route>
+              <Route path={`/earth`} element={<EarthPage />}></Route>
+              <Route path={`/mars`} element={<MarsPage />}></Route>
             </Route>
           </Routes>
         </LocalStorageContextWrapper>

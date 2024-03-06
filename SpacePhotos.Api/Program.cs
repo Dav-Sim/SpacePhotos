@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using SpacePhotos.Api.Helpers;
+using SpacePhotos.Api.Middleware;
+using SpacePhotos.Api.Services;
 
 namespace SpacePhotos.Api;
 
@@ -20,7 +21,11 @@ public class Program
 
         builder.Services.AddHttpClient();
 
+        builder.Services.AddTransient<PhotoService>();
+
         var app = builder.Build();
+
+        app.UseErrorHandler();
 
         app.UseDefaultFiles();
         app.UseStaticFiles();

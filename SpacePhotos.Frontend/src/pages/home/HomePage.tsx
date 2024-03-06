@@ -17,7 +17,7 @@ export function HomePage() {
     }, [photoOfTheDay?.data?.url]);
 
     return (
-        <div>
+        <>
             <h3 className="text-center border-bottom pb-2">Astronomy Picture of the Day</h3>
 
             <Loading loading={photoOfTheDay.isFetching}>
@@ -43,6 +43,6 @@ export function HomePage() {
                     }
                 </div>
             </Loading>
-        </div>
+        </>
     );
 }

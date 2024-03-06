@@ -1,4 +1,4 @@
-﻿namespace SpacePhotos.Api.Helpers
+﻿namespace SpacePhotos.Api
 {
     public class AppSettings
     {

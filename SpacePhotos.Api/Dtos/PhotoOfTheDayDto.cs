@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace SpacePhotos.Api.Controllers.Photo.Dtos;
+namespace SpacePhotos.Api.Dtos;
 
 public class PhotoOfTheDayDto
 {
