@@ -8,10 +8,20 @@ export function Footer() {
                     Space Photos
                 </p>
 
-                <p className="m-0">
-                    <span className="me-2">Source</span>
-                    <a href="https://api.nasa.gov/">NASA</a>
-                </p>
+                <a href="https://api.nasa.gov/">
+                    <i className="fa-solid fa-up-right-from-square me-2"></i>
+                    NASA
+                </a>
+
+                <a href="mailto:info@davidsimanek.cz">
+                    <i className="fa-solid fa-envelope me-2"></i>
+                    Email
+                </a>
+
+                <a href="https://github.com/Dav-Sim" target="_blank" rel="noreferrer">
+                    <i className="fa-brands fa-github me-2"></i>
+                    Github
+                </a>
 
                 <p className="m-0">
                     <i className="fa-regular fa-copyright me-2"></i>

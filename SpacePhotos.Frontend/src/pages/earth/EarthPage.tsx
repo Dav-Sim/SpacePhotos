@@ -28,7 +28,7 @@ export function EarthPage() {
     return (
         <>
             <PageTitle title="Earth pictures" />
-            <Loading loading={photos.isFetching}>
+            <Loading loading={photos.isFetching} gray={false}>
                 <div className="d-flex flex-column justify-content-center align-items-center gap-2">
 
                     <p className="m-0">{slides?.[photoIndex].title}</p>
@@ -51,7 +51,7 @@ export function EarthPage() {
                         inline={{
                             style: {
                                 width: "100%",
-                                aspectRatio: "1 / .9",
+                                aspectRatio: "1 / .6",
                                 margin: "0 auto",
                             },
                         }}

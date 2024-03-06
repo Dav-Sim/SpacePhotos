@@ -1,12 +1,12 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Loading } from "../shared/Loading";
 import { useMemo, useState } from "react";
 
 export function Header() {
     const env = import.meta.env.MODE ?? "";
 
+    const loc = useLocation();
     const [menu, setMenu] = useState(false);
-
     const navigate = useNavigate();
 
     const toggleMenu = (ev: React.SyntheticEvent<HTMLAnchorElement>) => {
@@ -14,12 +14,19 @@ export function Header() {
         setMenu(!menu);
     };
 
+    const path = useMemo(() => {
+        const i = loc.pathname.lastIndexOf("/");
+        return (i >= 0) ? loc.pathname.substring(i) : "/";
+    }, [loc.pathname]);
+
     //all menu links
-    const links = useMemo(() => [
-        { url: "/", title: "Picture of the day" },
-        { url: "/earth", title: "Earth" },
-        { url: "/mars", title: "Mars" },
-    ], []);
+    const links = useMemo(() => {
+        return [
+            { url: "/", title: "Picture of the day" },
+            { url: "/earth", title: "Earth" },
+            { url: "/mars", title: "Mars" },
+        ];
+    }, []);
 
     const handleNavigate = (ev: React.SyntheticEvent<HTMLAnchorElement>, to: string) => {
         ev.preventDefault();
@@ -32,7 +39,8 @@ export function Header() {
             <div>
                 <EnvironmentBar environment={env} />
 
-                <nav className="navbar-dark bg-dark text-light shadow px-2 d-flex justify-content-between align-items-center">
+                <nav className="navbar navbar-dark bg-dark text-light shadow px-2 d-flex justify-content-between align-items-center">
+
                     <div className="d-flex align-items-center gap-3">
                         <div className="brand py-2 ps-0 ps-md-4">
                             <Link to={`/`} className="navbar-brand fs-5">
@@ -41,13 +49,22 @@ export function Header() {
                                 <span className="d-inline d-md-none">Space P.</span>
                             </Link>
                         </div>
-                    </div>
 
-                    {/* large screen menu */}
-                    <div className="d-none d-md-flex gap-2">
-                        {
-                            links.map(link => <Link to={link.url} key={link.url}>{link.title}</Link>)
-                        }
+                        {/* large screen menu */}
+                        <ul className="d-none d-md-flex flex-row gap-2 navbar-nav">
+                            {
+                                links.map(link =>
+                                    <li className="nav-item"
+                                        key={link.url}>
+                                        <Link to={link.url}
+                                            className={`nav-link ${(path === link.url ? "active" : "")}`}>
+                                            {link.title}
+                                        </Link>
+                                    </li>
+                                )
+                            }
+                        </ul>
+
                     </div>
 
                     <div className="d-flex gap-3 align-items-center">
@@ -66,7 +83,7 @@ export function Header() {
                 {
                     !!menu &&
                     <>
-                        <div className="offcanvas offcanvas-end text-bg-dark show" role="dialog">
+                        <div className="navbar-dark bg-dark offcanvas offcanvas-end text-bg-dark show" role="dialog">
                             <div className="offcanvas-header">
                                 <h5 className="offcanvas-title">
                                     <i className="fa-solid fa-meteor me-2"></i>
@@ -83,7 +100,7 @@ export function Header() {
                                     {
                                         links.map(link =>
                                             <li key={link.url} className="nav-item">
-                                                <a className="nav-link" href="/" onClick={ev => handleNavigate(ev, link.url)} key={link.url}>{link.title}</a>
+                                                <a className={`nav-link ${(path === link.url ? "active" : "")}`} href="/" onClick={ev => handleNavigate(ev, link.url)} key={link.url}>{link.title}</a>
                                             </li>
                                         )
                                     }

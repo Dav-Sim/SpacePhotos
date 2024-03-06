@@ -19,7 +19,7 @@ export function HomePage() {
     return (
         <>
             <PageTitle title="Astronomy Picture of the Day" />
-            <Loading loading={photoOfTheDay.isFetching}>
+            <Loading loading={photoOfTheDay.isFetching} gray={false}>
                 <div className="d-flex flex-column justify-content-center align-items-center gap-2">
                     {
                         photoOfTheDay?.data &&
