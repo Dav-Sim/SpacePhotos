@@ -8,6 +8,8 @@ import { LocalStorageContextWrapper } from "./helpers/localStorage";
 import { AppSettings, defaultAppSettings } from "./types/appSettings";
 import { MarsPage } from "./pages/mars/MarsPage";
 import { EarthPage } from "./pages/earth/EarthPage";
+import React, { createContext, useContext, useState } from "react";
+import { ProblemContextWrapper } from "./context/ProblemContext";
 
 const queryClient = new QueryClient();
 
@@ -35,9 +37,12 @@ function Layout() {
     <div className="d-flex flex-column" style={{ minHeight: '100vh' }}>
       <Header />
       <Main>
-        <Outlet />
+        <ProblemContextWrapper>
+          <Outlet />
+        </ProblemContextWrapper>
       </Main>
       <Footer />
     </div>
   );
 }
+
