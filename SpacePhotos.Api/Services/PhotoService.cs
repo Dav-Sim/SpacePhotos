@@ -16,22 +16,41 @@ namespace SpacePhotos.Api.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<PhotoOfTheDayDto> GetPhotoOfTheDayAsync()
+        public async Task<IEnumerable<PhotoOfTheDayDto>> GetPhotoOfTheDayAsync(DateTime? from = null, DateTime? to = null)
         {
-            var url = $"{_settings.Endpoints.APOD}?api_key={_settings.ApiKey}";
+            var url = $"{_settings.Endpoints.APOD}?api_key={_settings.ApiKey}&thumbs=true";
 
-            var data = await _httpClientFactory.CreateClient().GetFromJsonAsync<PhotoOfTheDayNasaDto>(url)
-                ?? throw new ApplicationException("Cannot retrieve photo from NASA API");
+            IEnumerable<PhotoOfTheDayNasaDto> data;
 
-            return new PhotoOfTheDayDto()
+            if (from != null || to != null)
             {
-                Copyright = data.Copyright,
-                Date = DateTime.Parse(data.Date, CultureInfo.InvariantCulture),
-                Explanation = data.Explanation,
-                HDUrl = data.HDUrl,
-                Title = data.Title,
-                Url = data.Url
-            };
+                url += $"&start_date={from:yyyy-MM-dd}&end_date={to:yyyy-MM-dd}";
+
+                data = await _httpClientFactory.CreateClient().GetFromJsonAsync<IEnumerable<PhotoOfTheDayNasaDto>>(url)
+                    ?? throw new ApplicationException("Cannot retrieve photo from NASA API");
+            }
+            else
+            {
+                var item = await _httpClientFactory.CreateClient().GetFromJsonAsync<PhotoOfTheDayNasaDto>(url)
+                    ?? throw new ApplicationException("Cannot retrieve photo from NASA API");
+
+                data = new List<PhotoOfTheDayNasaDto>()
+                {
+                    item
+                };
+            }
+
+            return data.Select(photo => new PhotoOfTheDayDto()
+            {
+                Copyright = photo.Copyright,
+                Date = DateTime.Parse(photo.Date, CultureInfo.InvariantCulture),
+                Explanation = photo.Explanation,
+                HDUrl = photo.HDUrl,
+                Title = photo.Title,
+                Url = photo.Url,
+                MediaType = photo.MediaType,
+                VideoThumbnail = photo.VideoThumbnail,
+            });
         }
 
         public async Task<IEnumerable<EarthDto>> GetEarthPhotosAsync()

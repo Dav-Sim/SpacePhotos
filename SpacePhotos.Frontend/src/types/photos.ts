@@ -6,6 +6,8 @@ export interface PhotoOfTheDay {
     hdurl: string;
     title: string;
     url: string;
+    mediaType: string;
+    videoThumbnail?: string;
 }
 
 export interface EarthPhoto {

@@ -11,4 +11,6 @@ public class PhotoOfTheDayDto
     public string Url { get; set; } = null!;
     [JsonPropertyName("hdurl")]
     public string HDUrl { get; set; } = null!;
+    public string MediaType { get; set; } = null!;
+    public string? VideoThumbnail { get; set; }
 }

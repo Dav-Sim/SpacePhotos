@@ -9,6 +9,10 @@ public class PhotoOfTheDayNasaDto
     public string Explanation { get; set; } = null!;
     [JsonPropertyName("hdurl")]
     public string HDUrl { get; set; } = null!;
+    [JsonPropertyName("media_type")]
+    public string MediaType { get; set; } = null!;
+    [JsonPropertyName("thumbnail_url")]
+    public string? VideoThumbnail { get; set; }
     public string Title { get; set; } = null!;
     public string Url { get; set; } = null!;
 }

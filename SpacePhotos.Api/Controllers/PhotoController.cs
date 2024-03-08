@@ -15,9 +15,9 @@ public class PhotoController : ControllerBase
     }
 
     [HttpGet("apod")]
-    public async Task<ActionResult<PhotoOfTheDayDto>> GetPhotoOfTheDay()
+    public async Task<ActionResult<IEnumerable<PhotoOfTheDayDto>>> GetPhotoOfTheDay([FromQuery] DateTime? from, [FromQuery] DateTime? to)
     {
-        var data = await _photoService.GetPhotoOfTheDayAsync();
+        var data = await _photoService.GetPhotoOfTheDayAsync(from, to);
 
         return Ok(data);
     }

@@ -1,10 +1,12 @@
 export function PageTitle({
-    title
+    title,
+    className
 }: Readonly<{
-    title: string
+    title: string,
+    className?: string
 }>) {
     return (
-        <h3 className="text-center border-bottom pb-2">
+        <h3 className={`text-center border-bottom pb-2 ${className ?? ""}`}>
             {title}
         </h3>
     )
