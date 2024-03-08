@@ -33,7 +33,7 @@ export const usePhotoOfTheDay = (from?: Date, to?: Date) => {
     });
 };
 
-export const useEarthPhotos = () => {
+export const useEarthPhotos = (date?: Date) => {
 
     const problemContext = useContext(ProblemContext);
 
@@ -41,10 +41,10 @@ export const useEarthPhotos = () => {
         ...defaultQueryOptions(),
         gcTime: 60 * 60 * 1000,
         staleTime: 60 * 60 * 1000,
-        queryKey: [queryKeys.earthPhotos],
+        queryKey: [queryKeys.earthPhotos, date],
         queryFn: async () => {
             try {
-                const response = await axios.get<EarthPhoto[]>(`api/photo/epic`);
+                const response = await axios.get<EarthPhoto[]>(`api/photo/epic?date=${date?.toISOString()?.substring(0, 10) ?? ""}`);
                 return response.data;
             }
             catch (error) {

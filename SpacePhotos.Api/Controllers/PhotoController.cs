@@ -23,9 +23,9 @@ public class PhotoController : ControllerBase
     }
 
     [HttpGet("epic")]
-    public async Task<ActionResult<IEnumerable<EarthDto>>> GetEarthPhotos()
+    public async Task<ActionResult<IEnumerable<EarthDto>>> GetEarthPhotos([FromQuery] DateTime? date)
     {
-        var data = await _photoService.GetEarthPhotosAsync();
+        var data = await _photoService.GetEarthPhotosAsync(date);
 
         return Ok(data);
     }

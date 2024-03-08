@@ -7,21 +7,25 @@ import { Captions } from "yet-another-react-lightbox/plugins";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/captions.css";
 import { useMemo, useState } from "react";
+import { ImageThumbnailCard } from "../../components/shared/ImageThumbnailCard";
 
 export function HomePage() {
     usePageTitle("Home");
 
     //setter can be used later to select eg month and see older pictures...
-    const [date, setDate] = useState(new Date());
+    const [date,] = useState(new Date(2024, 2, 1, 12));
     const [todayPhotoLoaded, setTodayPhotoLoaded] = useState(false);
     const [viewer, setViewer] = useState({ open: false, index: 0 });
 
     const dateFromTo = useMemo(() => {
         const today = new Date();
-        const from = new Date(date.getFullYear(), date.getMonth(), 1);
-        const to = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-        if (from > today) from.setDate(today.getDate());
-        if (to > today) to.setDate(today.getDate());
+
+        let from = new Date(date.getFullYear(), date.getMonth(), 1, 12);
+        let to = new Date(date.getFullYear(), date.getMonth() + 1, 0, 12);
+
+        if (from > today) from = today;
+        if (to > today) to = today;
+
         return { from, to };
     }, [date]);
 
@@ -34,7 +38,7 @@ export function HomePage() {
             ?.map(photo => ({
                 src: photo.mediaType === "image" ? photo.url : photo.videoThumbnail ?? "",
                 title: photo.title,
-                description: photo.explanation
+                description: `Copyright ${photo.copyright ?? "none"}. ${photo.explanation}`
             })) ?? [];
     }, [monthPhotos]);
 
@@ -58,16 +62,18 @@ export function HomePage() {
                                 todayPhotoLoaded &&
                                 <>
                                     <p>{photoOfTheDay.explanation}</p>
-                                    <p>Copyright {photoOfTheDay.copyright}</p>
+                                    <p>Copyright {photoOfTheDay.copyright ?? "none"}</p>
+                                    {
+                                        photoOfTheDay.mediaType === "image" &&
+                                        <a href={photoOfTheDay.hdurl}
+                                            download
+                                            target="_blank">
+                                            <i className="fa-solid fa-download me-2"></i>
+                                            Download in full resolution
+                                        </a>
+                                    }
                                 </>
                             }
-
-                            <a href={photoOfTheDay.hdurl}
-                                download
-                                target="_blank">
-                                <i className="fa-solid fa-download me-2"></i>
-                                Download in full resolution
-                            </a>
                         </>
                     }
 
@@ -79,18 +85,30 @@ export function HomePage() {
                 <div className="d-flex flex-row flex-wrap justify-content-center gap-2">
                     {
                         monthPhotos?.map((photo, index) =>
-                            <div key={photo.date} className="col-12 col-md-5 col-lg-3 d-flex flex-column justify-content-start">
+                            <ImageThumbnailCard key={photo.date} className="col-12 col-md-5 col-lg-3 d-flex flex-column justify-content-start">
                                 <p className="m-0">
                                     {photo.title}
                                 </p>
+
+                                <p className="m-0">
+                                    {new Date(photo.date).toLocaleDateString()}
+                                </p>
                                 {
                                     photo.mediaType === "image" &&
-                                    <img src={photo.url}
-                                        alt=""
-                                        role="presentation"
-                                        className="pointer"
-                                        onClick={() => setViewer({ open: true, index })}
-                                    />
+                                    <>
+                                        <img src={photo.url}
+                                            alt=""
+                                            role="presentation"
+                                            className="pointer"
+                                            onClick={() => setViewer({ open: true, index })}
+                                        />
+                                        <a href={photo.hdurl}
+                                            download
+                                            target="_blank">
+                                            <i className="fa-solid fa-download me-2"></i>
+                                            Download in full resolution
+                                        </a>
+                                    </>
                                 }
                                 {
                                     photo.mediaType === "video" &&
@@ -98,7 +116,7 @@ export function HomePage() {
                                         src={photo.url}>
                                     </iframe>
                                 }
-                            </div>
+                            </ImageThumbnailCard>
                         )
                     }
                 </div>

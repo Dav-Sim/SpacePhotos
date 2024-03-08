@@ -10,6 +10,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpacePhotos.Api", "SpacePho
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "SpacePhotos.Frontend", "SpacePhotos.Frontend\SpacePhotos.Frontend.esproj", "{3C57DD21-509B-4881-9AC5-20A462E4C2D0}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SpacePhotos.Database", "SpacePhotos.Database\SpacePhotos.Database.sqlproj", "{84DA77D2-14CD-4BA7-81C9-1BD770A20749}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,12 @@ Global
 		{3C57DD21-509B-4881-9AC5-20A462E4C2D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C57DD21-509B-4881-9AC5-20A462E4C2D0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3C57DD21-509B-4881-9AC5-20A462E4C2D0}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{84DA77D2-14CD-4BA7-81C9-1BD770A20749}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84DA77D2-14CD-4BA7-81C9-1BD770A20749}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84DA77D2-14CD-4BA7-81C9-1BD770A20749}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{84DA77D2-14CD-4BA7-81C9-1BD770A20749}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84DA77D2-14CD-4BA7-81C9-1BD770A20749}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84DA77D2-14CD-4BA7-81C9-1BD770A20749}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

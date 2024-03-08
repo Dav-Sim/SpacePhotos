@@ -4,80 +4,74 @@ import { Loading } from "../../components/shared/Loading";
 import { usePageTitle } from "../../helpers/pageTitleHelper";
 import { useEarthPhotos } from "../../hooks/photos";
 import Lightbox from "yet-another-react-lightbox";
-import { Captions, Inline } from "yet-another-react-lightbox/plugins";
+import { Captions } from "yet-another-react-lightbox/plugins";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/captions.css";
+import { ImageThumbnailCard } from "../../components/shared/ImageThumbnailCard";
 
 export function EarthPage() {
     usePageTitle("Earth");
 
-    const [photoIndex, setPhotoIndex] = useState(0);
-    const [open, setOpen] = useState(false);
+    const [viewer, setViewer] = useState({ open: false, index: 0 });
 
-    const photos = useEarthPhotos();
+    const { data: photos, isFetching: photosFetching } = useEarthPhotos();
 
     const slides = useMemo(() => {
-        return photos?.data?.map(photo => ({
+        return photos?.map(photo => ({
             src: photo.url,
             hdSrc: photo.hdurl,
             description: <span>{new Date(photo.date).toLocaleString()} <br /> Lat: {photo.lat} Lon: {photo.lon}</span>,
             title: <span>{photo.caption}</span>
         }));
-    }, [photos?.data]);
+    }, [photos]);
 
     return (
         <>
             <PageTitle title="Earth pictures" />
-            <Loading loading={photos.isFetching} gray={false}>
-                <div className="d-flex flex-column justify-content-center align-items-center gap-2">
-
-                    <p className="m-0">{slides?.[photoIndex].title}</p>
-                    <Lightbox
-                        index={photoIndex}
-                        slides={slides}
-                        plugins={[Inline]}
-                        on={{
-                            view: ({ index }) => setPhotoIndex(index),
-                            click: () => setOpen((old) => !old)
-                        }}
-                        carousel={{
-                            finite: false,
-                            preload: 1,
-                            padding: 0,
-                            spacing: 0,
-                            imageFit: "contain"
-                        }}
-                        animation={{ fade: 300, swipe: 0, zoom: 300 }}
-                        inline={{
-                            style: {
-                                width: "100%",
-                                aspectRatio: "1 / .6",
-                                margin: "0 auto",
-                            },
-                        }}
-                    />
-                    <p className="m-0 text-center">{slides?.[photoIndex].description}</p>
+            <Loading loading={photosFetching} gray={false}>
+                <div className="d-flex flex-row flex-wrap justify-content-center gap-2">
                     {
-                        slides?.[photoIndex] &&
-                        <a href={slides[photoIndex].hdSrc}
-                            download
-                            target="_blank">
-                            <i className="fa-solid fa-download me-2"></i>
-                            Download in full resolution
-                        </a>
+                        photos?.map((photo, index) => (
+                            <ImageThumbnailCard key={photo.date} className="col-12 col-md-5 col-lg-3 d-flex flex-column justify-content-start">
+                                <p className="m-0">
+                                    <span>
+                                        {new Date(photo.date).toLocaleString()}
+                                        <br />
+                                        Lat: {photo.lat} Lon: {photo.lon}¨
+                                    </span>
+                                </p>
+
+                                <img src={photo.url}
+                                    alt=""
+                                    role="presentation"
+                                    className="pointer"
+                                    onClick={() => setViewer({ open: true, index })}
+                                />
+
+                                <a href={photo.hdurl}
+                                    download
+                                    target="_blank">
+                                    <i className="fa-solid fa-download me-2"></i>
+                                    Download in full resolution
+                                </a>
+                            </ImageThumbnailCard>
+                        ))
                     }
 
                     <Lightbox
-                        open={open}
+                        open={viewer.open}
                         plugins={[Captions]}
-                        close={() => setOpen(false)}
-                        index={photoIndex}
+                        close={() => setViewer((old) => ({ ...old, open: false }))}
+                        index={viewer.index}
                         slides={slides}
-                        on={{ view: ({ index }) => setPhotoIndex(index) }}
+                        on={{ view: ({ index }) => setViewer((old) => ({ ...old, index: index })) }}
                         animation={{ fade: 300, swipe: 0, zoom: 300 }}
                         controller={{ closeOnPullDown: true, closeOnBackdropClick: true }}
                         captions={{
                             descriptionTextAlign: "center",
+                        }}
+                        carousel={{
+                            finite: false
                         }}
                     />
                 </div>

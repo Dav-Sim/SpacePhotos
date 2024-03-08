@@ -53,9 +53,9 @@ namespace SpacePhotos.Api.Services
             });
         }
 
-        public async Task<IEnumerable<EarthDto>> GetEarthPhotosAsync()
+        public async Task<IEnumerable<EarthDto>> GetEarthPhotosAsync(DateTime? date = null)
         {
-            var url = $"{_settings.Endpoints.EPIC}?api_key={_settings.ApiKey}";
+            var url = $"{_settings.Endpoints.EPIC}/date/{date?.ToString("yyyy-MM-dd")}?api_key={_settings.ApiKey}";
 
             var data = await _httpClientFactory.CreateClient().GetFromJsonAsync<IEnumerable<EarthNasaDto>>(url)
                 ?? throw new ApplicationException("Cannot retrieve photo from NASA API");
