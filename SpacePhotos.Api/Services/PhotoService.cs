@@ -8,12 +8,12 @@ namespace SpacePhotos.Api.Services
     public class PhotoService
     {
         private readonly AppSettings _settings;
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly CachedHttpClientService _cachedHttp;
 
-        public PhotoService(IOptions<AppSettings> options, IHttpClientFactory httpClientFactory)
+        public PhotoService(IOptions<AppSettings> options, CachedHttpClientService cachedHttp)
         {
             _settings = options.Value;
-            _httpClientFactory = httpClientFactory;
+            _cachedHttp = cachedHttp;
         }
 
         public async Task<IEnumerable<PhotoOfTheDayDto>> GetPhotoOfTheDayAsync(DateTime? from = null, DateTime? to = null)
@@ -26,12 +26,12 @@ namespace SpacePhotos.Api.Services
             {
                 url += $"&start_date={from:yyyy-MM-dd}&end_date={to:yyyy-MM-dd}";
 
-                data = await _httpClientFactory.CreateClient().GetFromJsonAsync<IEnumerable<PhotoOfTheDayNasaDto>>(url)
+                data = await _cachedHttp.GetAsync<IEnumerable<PhotoOfTheDayNasaDto>>(url, TimeSpan.FromHours(1))
                     ?? throw new ApplicationException("Cannot retrieve photo from NASA API");
             }
             else
             {
-                var item = await _httpClientFactory.CreateClient().GetFromJsonAsync<PhotoOfTheDayNasaDto>(url)
+                var item = await _cachedHttp.GetAsync<PhotoOfTheDayNasaDto>(url, TimeSpan.FromHours(1))
                     ?? throw new ApplicationException("Cannot retrieve photo from NASA API");
 
                 data = new List<PhotoOfTheDayNasaDto>()
@@ -57,7 +57,7 @@ namespace SpacePhotos.Api.Services
         {
             var url = $"{_settings.Endpoints.EPIC}/date/{date?.ToString("yyyy-MM-dd")}?api_key={_settings.ApiKey}";
 
-            var data = await _httpClientFactory.CreateClient().GetFromJsonAsync<IEnumerable<EarthNasaDto>>(url)
+            var data = await _cachedHttp.GetAsync<IEnumerable<EarthNasaDto>>(url, TimeSpan.FromHours(1))
                 ?? throw new ApplicationException("Cannot retrieve photo from NASA API");
 
             return data

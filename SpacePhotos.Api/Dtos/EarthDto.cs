@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace SpacePhotos.Api.Dtos;
 
@@ -12,6 +12,6 @@ public class EarthDto
     public double Lat { get; set; }
     public double Lon { get; set; }
     public string Url { get; set; } = null!;
-    [JsonPropertyName("hdurl")]
+    [JsonProperty("hdurl")]
     public string HDUrl { get; set; } = null!;
 }

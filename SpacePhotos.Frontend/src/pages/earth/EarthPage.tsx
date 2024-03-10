@@ -37,7 +37,7 @@ export function EarthPage() {
                                     <span>
                                         {new Date(photo.date).toLocaleString()}
                                         <br />
-                                        Lat: {photo.lat} Lon: {photo.lon}¨
+                                        Lat: {photo.lat} Lon: {photo.lon}
                                     </span>
                                 </p>
 

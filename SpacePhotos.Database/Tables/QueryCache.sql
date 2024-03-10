@@ -1,0 +1,11 @@
+﻿CREATE TABLE [dbo].[QueryCache]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+	[Query] NVARCHAR(2000) NOT NULL,
+	[Result] NVARCHAR(MAX) NOT NULL,
+	[CreatedOn] DATETIME NOT NULL DEFAULT(GETDATE()),
+)
+GO
+
+CREATE UNIQUE INDEX [AK_QueryCache_Query] ON [dbo].[QueryCache] ([Query])
+GO

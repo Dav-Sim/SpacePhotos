@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace SpacePhotos.Api.Dtos.Nasa;
 
@@ -19,7 +19,7 @@ public class EarthCentroidCoordinatesNasaDto
 
 public class EarthCoordsNasaDto
 {
-    [JsonPropertyName("centroid_coordinates")]
+    [JsonProperty("centroid_coordinates")]
     public EarthCentroidCoordinatesNasaDto CentroidCoordinates { get; set; } = null!;
 }
 

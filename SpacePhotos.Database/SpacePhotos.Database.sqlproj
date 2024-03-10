@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{84da77d2-14cd-4ba7-81c9-1bd770a20749}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql150DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
@@ -57,5 +57,12 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="Tables" />
+    <Folder Include="PublishProfiles" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Tables\QueryCache.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PublishProfiles\Development.publish.xml" />
   </ItemGroup>
 </Project>
