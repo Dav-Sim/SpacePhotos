@@ -9,28 +9,18 @@ import "yet-another-react-lightbox/plugins/captions.css";
 import { useMemo, useState } from "react";
 import { ImageThumbnailCard } from "../../components/shared/ImageThumbnailCard";
 
-export function HomePage() {
-    usePageTitle("Home");
+export function PictOfTheDayPage() {
+    usePageTitle("Picture of the day");
 
     //setter can be used later to select eg month and see older pictures...
-    const [date,] = useState(new Date(2024, 2, 1, 12));
+    const actualMonthStart = useActualMonthStart();
+    const [date, setDate] = useState(actualMonthStart);
     const [todayPhotoLoaded, setTodayPhotoLoaded] = useState(false);
     const [viewer, setViewer] = useState({ open: false, index: 0 });
-
-    const dateFromTo = useMemo(() => {
-        const today = new Date();
-
-        let from = new Date(date.getFullYear(), date.getMonth(), 1, 12);
-        let to = new Date(date.getFullYear(), date.getMonth() + 1, 0, 12);
-
-        if (from > today) from = today;
-        if (to > today) to = today;
-
-        return { from, to };
-    }, [date]);
+    const month = useMonthStartAndEnd(date);
 
     const { data: currentDayPhotos, isFetching: currentDayPhotosFetching } = usePhotoOfTheDay();
-    const { data: monthPhotos, isFetching: monthPhotosFetching } = usePhotoOfTheDay(dateFromTo.from, dateFromTo.to);
+    const { data: monthPhotos, isFetching: monthPhotosFetching } = usePhotoOfTheDay(month.from, month.to);
     const photoOfTheDay = useMemo(() => currentDayPhotos?.[0], [currentDayPhotos]);
 
     const slides = useMemo(() => {
@@ -41,6 +31,19 @@ export function HomePage() {
                 description: `Copyright ${photo.copyright ?? "none"}. ${photo.explanation}`
             })) ?? [];
     }, [monthPhotos]);
+
+    const monthOptions = useMemo(() => {
+        const from = new Date(2019, 12, 1, 12);
+        const options: { text: string, value: string }[] = [];
+        while (from < actualMonthStart) {
+            from.setMonth(from.getMonth() + 1);
+            options.push({
+                text: `${from.getFullYear()}/${(from.getMonth() + 1).toLocaleString("en-US", { minimumIntegerDigits: 2 })}`,
+                value: from.toISOString().substring(0, 10)
+            });
+        }
+        return options;
+    }, [actualMonthStart]);
 
     return (
         <>
@@ -82,7 +85,25 @@ export function HomePage() {
 
             <PageTitle title="Old Pictures of the Day" className="mt-4" />
             <Loading loading={monthPhotosFetching} gray={false}>
-                <div className="d-flex flex-row flex-wrap justify-content-center gap-2">
+                <div data-bs-theme="dark" className="col col-md-8 col-lg-6 form-floating mx-auto mb-2">
+                    <select
+                        className="form-select"
+                        id="monthSelect"
+                        value={date.toISOString().substring(0, 10)}
+                        onChange={(ev) => setDate(new Date(ev.currentTarget.value))}
+                        disabled={monthPhotosFetching}
+                    >
+                        {
+                            monthOptions.map(month => (
+                                <option key={month.value} value={month.value}>{month.text}</option>
+                            ))
+                        }
+                    </select>
+                    <label htmlFor="monthSelect">Pictures of the day for month</label>
+                </div>
+
+                <div className="d-flex flex-row flex-wrap justify-content-center gap-2"
+                    style={{ minHeight: "200px" }}>
                     {
                         monthPhotos?.map((photo, index) =>
                             <ImageThumbnailCard key={photo.date} className="col-12 col-md-5 col-lg-3 d-flex flex-column justify-content-start">
@@ -140,4 +161,24 @@ export function HomePage() {
             />
         </>
     );
+}
+
+function useActualMonthStart() {
+    return useMemo(() => {
+        const today = new Date();
+        return new Date(today.getFullYear(), today.getMonth(), 1, 12);
+    }, []);
+}
+
+function useMonthStartAndEnd(date: Date) {
+    return useMemo(() => {
+        const today = new Date();
+        let from = new Date(date.getFullYear(), date.getMonth(), 1, 12);
+        let to = new Date(date.getFullYear(), date.getMonth() + 1, 0, 12);
+
+        if (from > today) from = today;
+        if (to > today) to = today;
+
+        return { from, to };
+    }, [date]);
 }
