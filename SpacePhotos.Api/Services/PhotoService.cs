@@ -26,7 +26,9 @@ namespace SpacePhotos.Api.Services
             {
                 url += $"&start_date={from:yyyy-MM-dd}&end_date={to:yyyy-MM-dd}";
 
-                data = await _cachedHttp.GetAsync<IEnumerable<PhotoOfTheDayNasaDto>>(url, TimeSpan.FromHours(1))
+                var cacheTime = to < DateTime.Now ? TimeSpan.FromDays(1) : TimeSpan.FromHours(1);
+
+                data = await _cachedHttp.GetAsync<IEnumerable<PhotoOfTheDayNasaDto>>(url, cacheTime)
                     ?? throw new ApplicationException("Cannot retrieve photo from NASA API");
             }
             else
@@ -57,7 +59,9 @@ namespace SpacePhotos.Api.Services
         {
             var url = $"{_settings.Endpoints.EPIC}/date/{date?.ToString("yyyy-MM-dd")}?api_key={_settings.ApiKey}";
 
-            var data = await _cachedHttp.GetAsync<IEnumerable<EarthNasaDto>>(url, TimeSpan.FromHours(1))
+            var cacheTime = date?.Date < DateTime.Now.Date ? TimeSpan.FromDays(10) : TimeSpan.FromHours(1);
+
+            var data = await _cachedHttp.GetAsync<IEnumerable<EarthNasaDto>>(url, cacheTime)
                 ?? throw new ApplicationException("Cannot retrieve photo from NASA API");
 
             return data

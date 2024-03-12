@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using SpacePhotos.Api.Dtos.Nasa;
 using SpacePhotos.EF;
 using SpacePhotos.EF.Entities;
-using System.Text.Json;
 
 namespace SpacePhotos.Api.Services
 {

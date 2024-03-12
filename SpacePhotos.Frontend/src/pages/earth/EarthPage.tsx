@@ -69,6 +69,8 @@ export function EarthPage() {
                         controller={{ closeOnPullDown: true, closeOnBackdropClick: true }}
                         captions={{
                             descriptionTextAlign: "center",
+                            descriptionMaxLines: 100,
+                            showToggle: true
                         }}
                         carousel={{
                             finite: false

@@ -14,16 +14,16 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
 
-        builder.Services.AddControllers().AddNewtonsoftJson();
-
+        builder.Services.AddControllers()
+            .AddNewtonsoftJson();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-
-        builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
         builder.Services.AddHttpClient();
         builder.Services.AddTransient<PhotoService>();
         builder.Services.AddTransient<CachedHttpClientService>();
+
+        builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
         builder.Services.AddDbContext<AppDbContext>(options =>
         {
@@ -34,17 +34,20 @@ public class Program
             }
         });
 
-        builder.Host.UseSerilog((context, configuration) =>
+        if (!builder.Environment.IsEnvironment("Testing"))
         {
-            configuration
-            .WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection"), new Serilog.Sinks.MSSqlServer.MSSqlServerSinkOptions()
+            builder.Host.UseSerilog((context, configuration) =>
             {
-                AutoCreateSqlTable = true,
-                TableName = "Serilog",
-                SchemaName = "dbo"
-            },
-            restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning);
-        });
+                configuration
+                .WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection"), new Serilog.Sinks.MSSqlServer.MSSqlServerSinkOptions()
+                {
+                    AutoCreateSqlTable = true,
+                    TableName = "Serilog",
+                    SchemaName = "dbo"
+                },
+                restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning);
+            });
+        }
 
 
         var app = builder.Build();
@@ -65,6 +68,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+        app.MapFallbackToFile("index.html");
 
         app.Run();
     }
