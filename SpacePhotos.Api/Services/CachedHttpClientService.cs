@@ -5,7 +5,7 @@ using SpacePhotos.EF.Entities;
 
 namespace SpacePhotos.Api.Services
 {
-    public class CachedHttpClientService
+    public class CachedHttpClientService : ICachedHttpClientService
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly AppDbContext _context;

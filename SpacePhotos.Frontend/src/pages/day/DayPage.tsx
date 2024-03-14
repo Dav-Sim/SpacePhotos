@@ -1,6 +1,6 @@
 import { Loading } from "../../components/shared/Loading";
 import { usePageTitle } from "../../helpers/pageTitleHelper";
-import { usePhotoOfTheDay } from "../../hooks/photos";
+import { useDayPhotos } from "../../hooks/photos";
 import { PageTitle } from "../../components/PageTitle";
 import Lightbox from "yet-another-react-lightbox";
 import { Captions } from "yet-another-react-lightbox/plugins";
@@ -8,9 +8,9 @@ import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/captions.css";
 import { useMemo, useState } from "react";
 import { ImageThumbnailCard } from "../../components/shared/ImageThumbnailCard";
-import { PhotoOfTheDay } from "../../types/photos";
+import { DayPhoto } from "../../types/photos";
 
-export function PictOfTheDayPage() {
+export function DayPage() {
     usePageTitle("Picture of the day");
 
     const actualMonthStart = useActualMonthStart();
@@ -18,8 +18,8 @@ export function PictOfTheDayPage() {
     const [viewer, setViewer] = useState({ open: false, index: 0 });
     const month = useMonthStartAndEnd(date);
 
-    const { data: currentDayPhotos, isFetching: currentDayPhotosFetching } = usePhotoOfTheDay();
-    const { data: monthPhotos, isFetching: monthPhotosFetching } = usePhotoOfTheDay(month.from, month.to);
+    const { data: currentDayPhotos, isFetching: currentDayPhotosFetching } = useDayPhotos();
+    const { data: monthPhotos, isFetching: monthPhotosFetching } = useDayPhotos(month.from, month.to);
     const photoOfTheDay = useMemo(() => currentDayPhotos?.[0], [currentDayPhotos]);
     const slides = usePhotoSlides(monthPhotos);
 
@@ -71,7 +71,7 @@ function PhotosThumbnails({
     photos,
     onImageClick
 }: Readonly<{
-    photos?: PhotoOfTheDay[],
+    photos?: DayPhoto[],
     onImageClick: (index: number) => void
 }>) {
     return <div className="d-flex flex-row flex-wrap justify-content-center gap-2"
@@ -157,7 +157,7 @@ function MonthSelector({
 function SinglePhoto({
     photo
 }: Readonly<{
-    photo?: PhotoOfTheDay
+    photo?: DayPhoto
 }>) {
     const [photoLoaded, setPhotoLoaded] = useState(false);
 
@@ -222,7 +222,7 @@ function useMonthOptions(actualMonthStart: Date) {
     }, [actualMonthStart]);
 }
 
-function usePhotoSlides(photos?: PhotoOfTheDay[]) {
+function usePhotoSlides(photos?: DayPhoto[]) {
     return useMemo(() => {
         return photos
             ?.map(photo => ({

@@ -20,8 +20,8 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         builder.Services.AddHttpClient();
-        builder.Services.AddTransient<PhotoService>();
-        builder.Services.AddTransient<CachedHttpClientService>();
+        builder.Services.AddTransient<IPhotoService, PhotoService>();
+        builder.Services.AddTransient<ICachedHttpClientService, CachedHttpClientService>();
 
         builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
@@ -34,21 +34,17 @@ public class Program
             }
         });
 
-        if (!builder.Environment.IsEnvironment("Testing"))
+        builder.Host.UseSerilog((context, configuration) =>
         {
-            builder.Host.UseSerilog((context, configuration) =>
+            configuration
+            .WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection"), new Serilog.Sinks.MSSqlServer.MSSqlServerSinkOptions()
             {
-                configuration
-                .WriteTo.MSSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection"), new Serilog.Sinks.MSSqlServer.MSSqlServerSinkOptions()
-                {
-                    AutoCreateSqlTable = true,
-                    TableName = "Serilog",
-                    SchemaName = "dbo"
-                },
-                restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning);
-            });
-        }
-
+                AutoCreateSqlTable = true,
+                TableName = "Serilog",
+                SchemaName = "dbo"
+            },
+            restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning);
+        });
 
         var app = builder.Build();
 

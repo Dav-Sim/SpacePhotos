@@ -2,7 +2,7 @@
 
 namespace SpacePhotos.Api.Dtos;
 
-public class EarthDto
+public class EarthPhotoDto
 {
     public string Identifier { get; set; } = null!;
     public string Caption { get; set; } = null!;

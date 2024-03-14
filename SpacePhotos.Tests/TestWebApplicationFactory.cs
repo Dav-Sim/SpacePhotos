@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using SpacePhotos.EF;
 
@@ -14,11 +17,30 @@ public class TestWebApplicationFactory<TStartup> : WebApplicationFactory<TStartu
     {
         builder.UseEnvironment("Testing");
 
+        SetupTestingConfiguration(builder);
+
         builder.ConfigureTestServices(services =>
         {
             SetupDatabase(services);
 
             SetupHttpClient(services);
+
+            SetupLogger(services);
+        });
+    }
+
+    private void SetupLogger(IServiceCollection services)
+    {
+        services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
+    }
+
+    private static void SetupTestingConfiguration(IWebHostBuilder builder)
+    {
+        builder.ConfigureAppConfiguration(config =>
+        {
+            //add testing json file here from this test project
+            config.SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.testing.json");
         });
     }
 

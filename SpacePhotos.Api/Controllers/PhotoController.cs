@@ -8,14 +8,14 @@ namespace SpacePhotos.Api.Controllers;
 [Route("api/photo")]
 public class PhotoController : ControllerBase
 {
-    private readonly PhotoService _photoService;
-    public PhotoController(PhotoService photoService)
+    private readonly IPhotoService _photoService;
+    public PhotoController(IPhotoService photoService)
     {
         _photoService = photoService;
     }
 
     [HttpGet("apod")]
-    public async Task<ActionResult<IEnumerable<PhotoOfTheDayDto>>> GetPhotoOfTheDay([FromQuery] DateTime? from, [FromQuery] DateTime? to)
+    public async Task<ActionResult<IEnumerable<DayPhotoDto>>> GetPhotoOfTheDay([FromQuery] DateTime? from, [FromQuery] DateTime? to)
     {
         var data = await _photoService.GetPhotoOfTheDayAsync(from, to);
 
@@ -23,10 +23,27 @@ public class PhotoController : ControllerBase
     }
 
     [HttpGet("epic")]
-    public async Task<ActionResult<IEnumerable<EarthDto>>> GetEarthPhotos([FromQuery] DateTime? date)
+    public async Task<ActionResult<IEnumerable<EarthPhotoDto>>> GetEarthPhotos([FromQuery] DateTime? date)
     {
         var data = await _photoService.GetEarthPhotosAsync(date);
 
         return Ok(data);
     }
+
+    [HttpGet("mars/perseverance/{camera:alpha}")]
+    public async Task<ActionResult<IEnumerable<RoverPhotoDto>>> GetPerseverancePhotos([FromRoute] string camera, [FromQuery] DateTime? date)
+    {
+        var data = await _photoService.GetPerseverancePhotosAsync(camera, date);
+
+        return Ok(data);
+    }
+
+    [HttpGet("mars/perseverance")]
+    public async Task<ActionResult<IEnumerable<RoverCameraDto>>> GetPerseveranceCameras()
+    {
+        var data = _photoService.GetPerseveranceCameras();
+
+        return Ok(data);
+    }
+
 }

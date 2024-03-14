@@ -1,18 +1,16 @@
 ﻿using Newtonsoft.Json;
 
-namespace SpacePhotos.Api.Dtos.Nasa;
+namespace SpacePhotos.Api.Dtos;
 
-public class PhotoOfTheDayNasaDto
+public class DayPhotoDto
 {
     public string Copyright { get; set; } = null!;
-    public string Date { get; set; } = null!;
+    public DateTime Date { get; set; }
     public string Explanation { get; set; } = null!;
-    [JsonProperty("hdurl")]
-    public string HDUrl { get; set; } = null!;
-    [JsonProperty("media_type")]
-    public string MediaType { get; set; } = null!;
-    [JsonProperty("thumbnail_url")]
-    public string? VideoThumbnail { get; set; }
     public string Title { get; set; } = null!;
     public string Url { get; set; } = null!;
+    [JsonProperty("hdurl")]
+    public string HDUrl { get; set; } = null!;
+    public string MediaType { get; set; } = null!;
+    public string? VideoThumbnail { get; set; }
 }

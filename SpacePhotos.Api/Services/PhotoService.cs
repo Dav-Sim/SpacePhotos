@@ -5,22 +5,22 @@ using System.Globalization;
 
 namespace SpacePhotos.Api.Services
 {
-    public class PhotoService
+    public class PhotoService : IPhotoService
     {
         private readonly AppSettings _settings;
-        private readonly CachedHttpClientService _cachedHttp;
+        private readonly ICachedHttpClientService _cachedHttp;
 
-        public PhotoService(IOptions<AppSettings> options, CachedHttpClientService cachedHttp)
+        public PhotoService(IOptions<AppSettings> options, ICachedHttpClientService cachedHttp)
         {
             _settings = options.Value;
             _cachedHttp = cachedHttp;
         }
 
-        public async Task<IEnumerable<PhotoOfTheDayDto>> GetPhotoOfTheDayAsync(DateTime? from = null, DateTime? to = null)
+        public async Task<IEnumerable<DayPhotoDto>> GetPhotoOfTheDayAsync(DateTime? from = null, DateTime? to = null)
         {
             var url = $"{_settings.Endpoints.APOD}?api_key={_settings.ApiKey}&thumbs=true";
 
-            IEnumerable<PhotoOfTheDayNasaDto> data;
+            IEnumerable<NasaDayPhotoDto> data;
 
             if (from != null || to != null)
             {
@@ -28,40 +28,40 @@ namespace SpacePhotos.Api.Services
 
                 var cacheTime = to < DateTime.Now ? TimeSpan.FromDays(1) : TimeSpan.FromHours(1);
 
-                data = await _cachedHttp.GetAsync<IEnumerable<PhotoOfTheDayNasaDto>>(url, cacheTime)
+                data = await _cachedHttp.GetAsync<IEnumerable<NasaDayPhotoDto>>(url, cacheTime)
                     ?? throw new ApplicationException("Cannot retrieve photo from NASA API");
             }
             else
             {
-                var item = await _cachedHttp.GetAsync<PhotoOfTheDayNasaDto>(url, TimeSpan.FromHours(1))
+                var item = await _cachedHttp.GetAsync<NasaDayPhotoDto>(url, TimeSpan.FromHours(1))
                     ?? throw new ApplicationException("Cannot retrieve photo from NASA API");
 
-                data = new List<PhotoOfTheDayNasaDto>()
+                data = new List<NasaDayPhotoDto>()
                 {
                     item
                 };
             }
 
-            return data.Select(photo => new PhotoOfTheDayDto()
+            return data.Select(photo => new DayPhotoDto()
             {
-                Copyright = photo.Copyright,
-                Date = DateTime.Parse(photo.Date, CultureInfo.InvariantCulture),
-                Explanation = photo.Explanation,
+                Url = photo.Url,
                 HDUrl = photo.HDUrl,
                 Title = photo.Title,
-                Url = photo.Url,
+                Copyright = photo.Copyright,
+                Explanation = photo.Explanation,
                 MediaType = photo.MediaType,
                 VideoThumbnail = photo.VideoThumbnail,
+                Date = DateTime.Parse(photo.Date, CultureInfo.InvariantCulture),
             });
         }
 
-        public async Task<IEnumerable<EarthDto>> GetEarthPhotosAsync(DateTime? date = null)
+        public async Task<IEnumerable<EarthPhotoDto>> GetEarthPhotosAsync(DateTime? date = null)
         {
             var url = $"{_settings.Endpoints.EPIC}/date/{date?.ToString("yyyy-MM-dd")}?api_key={_settings.ApiKey}";
 
             var cacheTime = date?.Date < DateTime.Now.Date ? TimeSpan.FromDays(10) : TimeSpan.FromHours(1);
 
-            var data = await _cachedHttp.GetAsync<IEnumerable<EarthNasaDto>>(url, cacheTime)
+            var data = await _cachedHttp.GetAsync<IEnumerable<NasaEarthPhotoDto>>(url, cacheTime)
                 ?? throw new ApplicationException("Cannot retrieve photo from NASA API");
 
             return data
@@ -70,18 +70,57 @@ namespace SpacePhotos.Api.Services
                     photo = item,
                     date = DateTime.Parse(item.Date, CultureInfo.InvariantCulture),
                 })
-                .Select(item => new EarthDto()
+                .Select(item => new EarthPhotoDto()
                 {
-                    Caption = item.photo.Caption,
                     Date = item.date,
-                    Identifier = item.photo.Identifier,
                     Image = item.photo.Image,
+                    Caption = item.photo.Caption,
+                    Identifier = item.photo.Identifier,
                     Lat = item.photo.Coords.CentroidCoordinates.Lat,
                     Lon = item.photo.Coords.CentroidCoordinates.Lon,
                     Version = item.photo.Version,
                     Url = $"{_settings.Endpoints.EPICImageRoot}/archive/natural/{item.date.Year:0000}/{item.date.Month:00}/{item.date.Day:00}/jpg/{item.photo.Image}.jpg",
                     HDUrl = $"{_settings.Endpoints.EPICImageRoot}/archive/natural/{item.date.Year:0000}/{item.date.Month:00}/{item.date.Day:00}/png/{item.photo.Image}.png",
                 });
+        }
+
+        public async Task<IEnumerable<RoverPhotoDto>> GetPerseverancePhotosAsync(string camera, DateTime? date)
+        {
+            var url = $"{_settings.Endpoints.Perseverance}?earth_date={(date ?? DateTime.Now):yyyy-MM-dd}&camera={camera}&api_key={_settings.ApiKey}";
+
+            var cacheTime = date?.Date < DateTime.Now.AddDays(-3).Date ? TimeSpan.FromDays(10) : TimeSpan.FromHours(1);
+
+            var data = await _cachedHttp.GetAsync<NasaRoverPhotosDto>(url, cacheTime)
+                ?? throw new ApplicationException("Cannot retrieve photo from NASA API");
+
+            return data.Photos
+                .Select(item => new RoverPhotoDto()
+                {
+                    Id = item.Id,
+                    Sol = item.Sol,
+                    Url = item.ImgSrc,
+                    EarthDate = item.EarthDate,
+                    CameraId = item.Camera.Id,
+                    CameraName = item.Camera.Name,
+                    CameraFullName = item.Camera.FullName,
+                    RoverId = item.Rover.Id,
+                    RoverName = item.Rover.Name,
+                    RoverLandingDate = item.Rover.LandingDate,
+                    RoverLaunchDate = item.Rover.LaunchDate,
+                    RoverMaxDate = item.Rover.MaxDate,
+                    RoverMaxSol = item.Rover.MaxSol,
+                    RoverStatus = item.Rover.Status,
+                    RoverTotalPhotos = item.Rover.TotalPhotos,
+                });
+        }
+
+        public IEnumerable<RoverCameraDto> GetPerseveranceCameras()
+        {
+            return _settings.PerseveranceCameras.Select(camera => new RoverCameraDto()
+            {
+                Key = camera.Key,
+                Name = camera.Name,
+            });
         }
     }
 }

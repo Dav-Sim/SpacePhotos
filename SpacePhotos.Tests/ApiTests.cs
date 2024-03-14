@@ -29,7 +29,7 @@ public class ApiTests : IClassFixture<TestWebApplicationFactory<Program>>
     public async Task Api_should_return_cached_photo_of_the_day()
     {
         //Arrange
-        var data = new PhotoOfTheDayNasaDto()
+        var data = new NasaDayPhotoDto()
         {
             Title = "TEST",
             Date = DateTime.Now.ToString("O")
@@ -43,7 +43,7 @@ public class ApiTests : IClassFixture<TestWebApplicationFactory<Program>>
 
         //Act
         var response = await _client.SendAsync(message);
-        var result = await response.Content.ReadFromJsonAsync<IEnumerable<PhotoOfTheDayDto>>();
+        var result = await response.Content.ReadFromJsonAsync<IEnumerable<DayPhotoDto>>();
 
         //Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -57,11 +57,11 @@ public class ApiTests : IClassFixture<TestWebApplicationFactory<Program>>
     {
         //Arrange
         DateTime? date = null;
-        var data = new List<EarthNasaDto>() {
-            new EarthNasaDto() {
+        var data = new List<NasaEarthPhotoDto>() {
+            new NasaEarthPhotoDto() {
                 Caption = "TEST",
-                Coords = new EarthCoordsNasaDto() {
-                    CentroidCoordinates = new EarthCentroidCoordinatesNasaDto() {
+                Coords = new NasaEarthCoordsDto() {
+                    CentroidCoordinates = new NasaEarthCentroidCoordsDto() {
                         Lat = 1,
                         Lon = 1
                     }
@@ -78,12 +78,29 @@ public class ApiTests : IClassFixture<TestWebApplicationFactory<Program>>
 
         //Act
         var response = await _client.SendAsync(message);
-        var result = await response.Content.ReadFromJsonAsync<IEnumerable<EarthDto>>();
+        var result = await response.Content.ReadFromJsonAsync<IEnumerable<EarthPhotoDto>>();
 
         //Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(result);
         Assert.NotEmpty(result);
         Assert.Equal(data.First().Caption, result.First().Caption);
+    }
+
+    [Fact]
+    public async Task Api_should_return_list_of_Perseverance_cameras()
+    {
+        //Arrange
+        var message = new HttpRequestMessage(HttpMethod.Get, $"api/photo/mars/perseverance");
+        var expectedCollection = _settings.PerseveranceCameras.Select(camera => new RoverCameraDto() { Key = camera.Key, Name = camera.Name });
+
+        //Act
+        var response = await _client.SendAsync(message);
+        var result = await response.Content.ReadFromJsonAsync<IEnumerable<RoverCameraDto>>();
+
+        //Assert
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(result);
+        Assert.Equal(expectedCollection, result);
     }
 }

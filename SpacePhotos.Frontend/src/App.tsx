@@ -3,7 +3,7 @@ import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { Header } from "./components/layout/Header";
 import { Main } from "./components/layout/Main";
 import { Footer } from "./components/layout/Footer";
-import { PictOfTheDayPage } from "./pages/pictureOfTheDay/PictOfTheDayPage";
+import { DayPage } from "./pages/day/DayPage";
 import { LocalStorageContextWrapper } from "./helpers/localStorage";
 import { AppSettings, defaultAppSettings } from "./types/appSettings";
 import { MarsPage } from "./pages/mars/MarsPage";
@@ -20,7 +20,7 @@ export function App() {
           localStorageKey="space_photos" defaultValue={defaultAppSettings}>
           <Routes>
             <Route Component={Layout}>
-              <Route path={`/`} element={<PictOfTheDayPage />}></Route>
+              <Route path={`/`} element={<DayPage />}></Route>
               <Route path={`/earth`} element={<EarthPage />}></Route>
               <Route path={`/mars`} element={<MarsPage />}></Route>
             </Route>

@@ -1,5 +1,5 @@
 
-export interface PhotoOfTheDay {
+export interface DayPhoto {
     copyright: string;
     date: string;
     explanation: string;
