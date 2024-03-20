@@ -122,5 +122,11 @@ namespace SpacePhotos.Api.Services
                 Name = camera.Name,
             });
         }
+
+        public bool IsCameraNameValid(string? name)
+        {
+            return !string.IsNullOrWhiteSpace(name)
+                && GetPerseveranceCameras().Any(cam => cam.Key == name);
+        }
     }
 }

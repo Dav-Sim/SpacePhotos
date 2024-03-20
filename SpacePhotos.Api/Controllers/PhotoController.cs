@@ -30,9 +30,14 @@ public class PhotoController : ControllerBase
         return Ok(data);
     }
 
-    [HttpGet("mars/perseverance/{camera:alpha}")]
+    [HttpGet("mars/perseverance/{camera}")]
     public async Task<ActionResult<IEnumerable<RoverPhotoDto>>> GetPerseverancePhotos([FromRoute] string camera, [FromQuery] DateTime? date)
     {
+        if (!_photoService.IsCameraNameValid(camera))
+        {
+            return ValidationProblem($"Camera name '{camera}' is not valid");
+        }
+
         var data = await _photoService.GetPerseverancePhotosAsync(camera, date);
 
         return Ok(data);

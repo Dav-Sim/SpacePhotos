@@ -8,5 +8,6 @@ namespace SpacePhotos.Api.Services
         IEnumerable<RoverCameraDto> GetPerseveranceCameras();
         Task<IEnumerable<RoverPhotoDto>> GetPerseverancePhotosAsync(string camera, DateTime? date);
         Task<IEnumerable<DayPhotoDto>> GetPhotoOfTheDayAsync(DateTime? from = null, DateTime? to = null);
+        bool IsCameraNameValid(string? name);
     }
 }

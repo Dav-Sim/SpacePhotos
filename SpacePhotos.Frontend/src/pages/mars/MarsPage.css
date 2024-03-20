@@ -1,0 +1,5 @@
+circle:hover {
+    fill: red;
+    stroke-opacity: .8;
+    fill-opacity: .8;
+}

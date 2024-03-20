@@ -13,7 +13,7 @@ export const useDayPhotos = (from?: Date, to?: Date) => {
 
     return useQuery<DayPhoto[], AxiosError<ProblemDetails>>({
         ...defaultQueryOptions(),
-        refetchOnMount: !!(from || to),
+        refetchOnMount: !(from || to),
         gcTime: 60 * 60 * 1000,
         staleTime: 60 * 60 * 1000,
         queryKey: [queryKeys.photoOfTheDay, from, to],
