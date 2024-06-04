@@ -46,12 +46,24 @@ public class Program
             restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Warning);
         });
 
+        //STATIC FILES OPTIONS
+        var staticFilesOptions = new StaticFileOptions()
+        {
+            OnPrepareResponse = (context) =>
+            {
+                // Disable caching of all static files.
+                context.Context.Response.Headers["Cache-Control"] = "no-cache";
+                context.Context.Response.Headers["Pragma"] = "no-cache";
+                context.Context.Response.Headers["Expires"] = "0";
+            }
+        };
+
         var app = builder.Build();
 
         app.UseErrorHandler();
 
         app.UseDefaultFiles();
-        app.UseStaticFiles();
+        app.UseStaticFiles(staticFilesOptions);
 
         if (app.Environment.IsDevelopment())
         {
@@ -64,7 +76,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
-        app.MapFallbackToFile("index.html");
+        app.MapFallbackToFile("index.html", staticFilesOptions);
 
         app.Run();
     }
